@@ -10,4 +10,5 @@ psycopg2-binary
 python-dotenv
 openai
 cloudinary
-translators
+google-cloud-translate
+google-generativeai
