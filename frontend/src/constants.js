@@ -79,38 +79,38 @@ export const collabText =
 export const pricing = [
   {
     id: "0",
-    title: "Basic",
+    title: "Free",
     description:
       "Your very own bedtime story author by your side, from only...",
-    price: "6.99",
-    features: [
-      "30 stories per month",
-      "3 super stories per month",
-      "Customer support",
-    ],
+    price: "0",
+    features: ["4 stories per month", "3 image per story"],
   },
   {
     id: "1",
-    title: "Premium",
+    title: "Basic",
     description:
       "Your very own bedtime story author by your side, from only...",
-    price: "9.99",
+    price: "29",
     features: [
-      "5 images per story",
-      "Profile/stories in Private Mode",
+      "20 stories per month",
+      "3 images per story",
       "Priority support to solve issues quickly",
+      "Own the rights to stories & images",
     ],
   },
   {
     id: "2",
-    title: "Enterprise",
+    title: "Premium",
     description:
       "Your very own bedtime story author by your side, from only...",
-    price: null,
+    price: "59",
     features: [
+      "30 stories per month",
+      "4 images per story",
+      "3 super stories per month",
+      "Profile/stories in Private Mode",
       "Own the rights to stories & images",
-      "Personalized recommendations based on your preferences",
-      "Ability to explore the app and its features without any cost",
+      "Priority support to solve issues quickly",
     ],
   },
 ];

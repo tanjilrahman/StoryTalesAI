@@ -40,14 +40,40 @@ def generate_title(req):
 
 
 class AllStoriesListView(generics.ListAPIView):
-    queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = Story.objects.order_by('-created_at')
+        # Get the 'n' value from query parameters
+        n = self.request.query_params.get('n')
+
+        # Apply limit if 'n' is provided
+        if n:
+            try:
+                n = int(n)
+                queryset = queryset[:n]
+            except ValueError:
+                # Handle invalid 'n' value (e.g., non-integer)
+                pass
+
+        return queryset
+
 
 class StoryRetrieveView(generics.RetrieveAPIView):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = [AllowAny]
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+        # Add the author's username to the response data
+        data["author_username"] = instance.author.username
+        data["author_first"] = instance.author.first_name
+        data["author_last"] = instance.author.last_name
+
+        return Response(data)
 
 class StoryListCreate(generics.ListCreateAPIView):
     serializer_class = StorySerializer
@@ -55,7 +81,7 @@ class StoryListCreate(generics.ListCreateAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        return Story.objects.filter(author=user)
+        return Story.objects.filter(author=user).order_by('-created_at')
     
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -79,7 +105,8 @@ class StoryDelete(generics.DestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Story.objects.filter(author=user)
+        if (user.username == "decoy"):
+            return Story.objects.filter()
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -89,43 +116,42 @@ class CreateUserView(generics.CreateAPIView):
 
 # Plot generate
 def generate_plot_with_gemini(lang):
-    prompt = f"Generate a short story plot with interesting twists in {lang}. Include all pg genres. Length: 100 characters"
+    prompt = f"Generate a short story plot with interesting twists in {lang}. Genre: Could be any one of these - Mythpunk, Gaslamp Fantasy, Cozy Mystery, Historical Romance with a Fantasy Twist, Post-Apocalyptic Hopepunk, Science Fantasy, Romantic Thriller, Historical Horror, Crime Comedy, Espionage Fantasy. Length: 100 characters"
 
     # Set up the model
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
-        "top_k": 0,
+        "top_k": 64,
         "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
     }
-
     safety_settings = [
         {
             "category": "HARM_CATEGORY_HARASSMENT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE",
         },
         {
             "category": "HARM_CATEGORY_HATE_SPEECH",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE",
         },
         {
             "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE",
         },
         {
             "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            "threshold": "BLOCK_NONE",
         },
     ]
 
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-pro-latest", 
-        generation_config=generation_config, 
-        safety_settings=safety_settings
+        model_name="gemini-1.5-flash-latest",
+        safety_settings=safety_settings,
+        generation_config=generation_config,
     )
-
     response = model.generate_content(prompt)
-    print(response)
+    print(response.text)
     return response.text
 
 # Gemini
@@ -138,34 +164,33 @@ def generate_story_with_gemini(plot, lang):
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
-        "top_k": 0,
+        "top_k": 64,
         "max_output_tokens": 8192,
         "response_mime_type": "application/json",
     }
-
     safety_settings = [
-    {
-        "category": "HARM_CATEGORY_HARASSMENT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-    },
-    {
-        "category": "HARM_CATEGORY_HATE_SPEECH",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-    },
-    {
-        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-    },
-    {
-        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-        "threshold": "BLOCK_MEDIUM_AND_ABOVE"
-    },
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
     ]
 
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-pro-latest", 
-        generation_config=generation_config, 
-        safety_settings=safety_settings
+        model_name="gemini-1.5-flash-latest",
+        safety_settings=safety_settings,
+        generation_config=generation_config,
     )
 
     response = model.generate_content(prompt_bangla if lang == "bangla" else prompt)

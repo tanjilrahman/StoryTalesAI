@@ -14,6 +14,7 @@ import Story from "./pages/Story.jsx";
 import Discover from "./pages/Discover.jsx";
 import "./index.css";
 import Home from "./pages/Home.jsx";
+import Register from "./pages/Register.jsx";
 
 function Logout() {
   localStorage.clear();

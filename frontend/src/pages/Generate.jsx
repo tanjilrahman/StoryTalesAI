@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 import { Link, useNavigate } from "react-router-dom";
+import { Button as Bt } from "../components/ui/button";
 import Button from "../components/Button";
 import { curve } from "../assets";
 import { useRef } from "react";
 import { Progress } from "../components/ui/progress";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import ButtonGradient from "../assets/svg/ButtonGradient";
+import { Language } from "../components/LanguageCombox";
 
 function Generate() {
   const parallaxRef = useRef(null);
@@ -15,8 +20,8 @@ function Generate() {
   const [filled, setFilled] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   useEffect(() => {
-    if (filled < 95 && isRunning) {
-      setTimeout(() => setFilled((prev) => (prev += 0.1)), 60);
+    if (filled < 100 && isRunning) {
+      setTimeout(() => setFilled((prev) => (prev += 0.1)), 40);
     }
   }, [filled, isRunning]);
 
@@ -49,7 +54,13 @@ function Generate() {
   return (
     <>
       <div className="flex min-h-screen">
-        {/* <MySidebar /> */}
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
+
+        <div className="md:hidden">
+          <Header />
+        </div>
         <div className="flex-1 pt-[12rem] -mt-[5.25rem]">
           <div className="container relative" ref={parallaxRef}>
             <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[3.875rem] md:mb-20 lg:mb-[6.25rem]">
@@ -70,7 +81,7 @@ function Generate() {
                 Every good story starts with a good idea
               </p>
               <textarea
-                className="w-full p-4 mb-2 border-none rounded-md"
+                className="w-full p-4 mb-2 bg-transparent border-2 border-gray-800 outline-none rounded-xl "
                 placeholder="Enter your story prompt..."
                 type="text"
                 value={title}
@@ -78,17 +89,21 @@ function Generate() {
               />
               <div className="flex justify-between">
                 <select
-                  className="w-full max-w-xs select select-primary"
+                  className="w-full px-2 text-gray-400 bg-transparent bg-gray-900 outline-none max-w-40 rounded-xl"
                   onChange={(e) => setLang(e.target.value)}
                 >
                   <option value="english">English</option>
                   <option value="bangla">Bangla</option>
                 </select>
                 <div>
-                  <Button onClick={generateTitle}>Generate Plot</Button>
-                  <Button white onClick={createStory}>
-                    Create
-                  </Button>
+                  <Bt
+                    variant="link"
+                    className="mr-3 font-bold text-gray-300"
+                    onClick={generateTitle}
+                  >
+                    Generate Plot
+                  </Bt>
+                  <Button onClick={createStory}>Create</Button>
                 </div>
               </div>
               {isRunning && (
@@ -103,6 +118,7 @@ function Generate() {
           </div>
         </div>
       </div>
+      <ButtonGradient />
     </>
   );
 }
