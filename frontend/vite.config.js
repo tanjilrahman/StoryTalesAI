@@ -10,4 +10,7 @@ export default defineConfig({
     },
     mainFields: [],
   },
+  server: {
+    host: true,
+  },
 });

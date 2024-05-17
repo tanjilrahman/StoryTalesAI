@@ -28,8 +28,8 @@ const Benefits = () => {
     <Section id="libary">
       <div className="container relative z-2">
         <Heading
-          className="md:max-w-md lg:max-w-2xl"
-          title="Our open library has +59,000 stories"
+          className="md:max-w-md lg:max-w-xl"
+          title="Our open library has +100 stories"
         />
 
         <div className="grid grid-cols-1 gap-10 mb-10 md:grid-cols-2 xl:grid-cols-3">

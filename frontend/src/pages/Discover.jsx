@@ -38,7 +38,7 @@ function Discover() {
       </div>
       <div className="w-full p-6 mx-auto mt-20 md:p-10 md:mt-0">
         <div className="my-4 text-center">
-          <h1 className="mb-6 text-5xl">
+          <h1 className="mb-3 md:mb-6 h1">
             The{" "}
             <span className="relative inline-block">
               Storyteller’s
@@ -52,7 +52,7 @@ function Discover() {
             </span>{" "}
             Hub
           </h1>
-          <p className="max-w-3xl mx-auto mb-6 body-1 text-n-2 lg:mb-8">
+          <p className="max-w-3xl mx-auto mb-6 text-xl text-n-2 lg:mb-8">
             Discover Community Creations
           </p>
         </div>

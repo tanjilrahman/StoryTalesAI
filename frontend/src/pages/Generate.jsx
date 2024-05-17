@@ -8,19 +8,18 @@ import { useRef } from "react";
 import { Progress } from "../components/ui/progress";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import ButtonGradient from "../assets/svg/ButtonGradient";
-import { Language } from "../components/LanguageCombox";
 
 function Generate() {
   const parallaxRef = useRef(null);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [lang, setLang] = useState("english");
+  const [lang, setLang] = useState("bangla");
 
   const [filled, setFilled] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [plotGenerating, setPlotGenerating] = useState(false);
   useEffect(() => {
-    if (filled < 100 && isRunning) {
+    if (filled <= 100 && isRunning) {
       setTimeout(() => setFilled((prev) => (prev += 0.1)), 40);
     }
   }, [filled, isRunning]);
@@ -30,6 +29,7 @@ function Generate() {
   }, [lang]);
 
   const createStory = () => {
+    if (isRunning || title === "") return;
     setIsRunning(true);
     api
       .post("/api/story/", { title, lang })
@@ -37,10 +37,12 @@ function Generate() {
         if (res.status === 201) navigate(`/story/${res.data.id}`);
         else alert("Failed to create story.");
       })
-      .catch((error) => console.log(error));
+      .catch((error) => alert(error))
+      .finally(() => setIsRunning(false));
   };
 
   const generateTitle = () => {
+    setPlotGenerating(true);
     api
       .post("/api/title/", { lang })
       .then((res) => res.data)
@@ -48,7 +50,8 @@ function Generate() {
         setTitle(data);
         console.log(data);
       })
-      .catch((err) => alert(err));
+      .catch((err) => alert(err))
+      .finally(() => setPlotGenerating(false));
   };
 
   return (
@@ -61,7 +64,7 @@ function Generate() {
         <div className="md:hidden">
           <Header />
         </div>
-        <div className="flex-1 pt-[12rem] -mt-[5.25rem]">
+        <div className="flex-1 pt-[12rem] -mt-[2rem] md:-mt-[5.25rem]">
           <div className="container relative" ref={parallaxRef}>
             <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[3.875rem] md:mb-20 lg:mb-[6.25rem]">
               <h1 className="mb-6 text-5xl">
@@ -81,35 +84,43 @@ function Generate() {
                 Every good story starts with a good idea
               </p>
               <textarea
-                className="w-full p-4 mb-2 bg-transparent border-2 border-gray-800 outline-none rounded-xl "
-                placeholder="Enter your story prompt..."
+                className="w-full p-4 mb-2 border-2 border-indigo-500 shadow-lg outline-none shadow-indigo-500/40 bg-n-7 rounded-xl "
+                placeholder="Enter your story plot..."
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <div className="flex justify-between">
+              <div className="flex items-center justify-between">
                 <select
-                  className="w-full px-2 text-gray-400 bg-transparent bg-gray-900 outline-none max-w-40 rounded-xl"
+                  className="px-2 text-gray-400 bg-transparent outline-none max-w-30 rounded-xl"
                   onChange={(e) => setLang(e.target.value)}
                 >
-                  <option value="english">English</option>
                   <option value="bangla">Bangla</option>
+                  <option value="english">English</option>
                 </select>
                 <div>
                   <Bt
                     variant="link"
                     className="mr-3 font-bold text-gray-300"
                     onClick={generateTitle}
+                    disabled={isRunning || plotGenerating}
                   >
                     Generate Plot
                   </Bt>
-                  <Button onClick={createStory}>Create</Button>
+                  <Button onClick={createStory} disabled={isRunning}>
+                    Create
+                  </Button>
                 </div>
               </div>
               {isRunning && (
-                <div className="flex flex-col max-w-xl mx-auto mt-10">
-                  <p className="max-w-lg pt-10 mx-auto mb-6 body-1 text-n-2 lg:mb-8">
-                    Please wait while your beautiful story is generating...
+                <div className="flex flex-col max-w-xl mx-auto mt-12 md:mt-28">
+                  <p className="max-w-lg mx-auto mb-3 md:mb-4 body-1 text-n-2 lg:mb-6">
+                    {filled < 40 &&
+                      "Please wait while we generate your story..."}
+                    {filled >= 40 &&
+                      filled < 99 &&
+                      "Generating story images..."}
+                    {filled >= 99 && "Finishing up..."}
                   </p>
                   <Progress value={filled} />
                 </div>
@@ -118,7 +129,6 @@ function Generate() {
           </div>
         </div>
       </div>
-      <ButtonGradient />
     </>
   );
 }

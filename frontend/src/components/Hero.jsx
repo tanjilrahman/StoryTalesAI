@@ -5,7 +5,6 @@ import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
 import { ScrollParallax } from "react-just-parallax";
 import { useRef } from "react";
 import Generating from "./Generating";
-import CompanyLogos from "./CompanyLogos";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
@@ -22,9 +21,9 @@ const Hero = () => {
       <div className="container relative" ref={parallaxRef}>
         <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[3.875rem] md:mb-20 lg:mb-[6.25rem]">
           <h1 className="mb-6 h1">
-            Explore the Possibilities of AI Making Story with {` `}
+            Explore the Possibilities of AI Story with {` `}
             <span className="relative inline-block">
-              StoryTalesAi{" "}
+              Golpo.ai{" "}
               <img
                 src={curve}
                 className="absolute left-0 w-full top-full xl:-mt-2"
@@ -52,7 +51,7 @@ const Hero = () => {
               <div className="aspect-[33/40] rounded-b-[0.9rem] overflow-hidden md:aspect-[688/490] lg:aspect-[1024/490]">
                 <img
                   src={heroImage}
-                  className="w-full scale-[1.7] translate-y-[8%] md:scale-[1] md:-translate-y-[10%] lg:-translate-y-[10%] "
+                  className="w-full scale-[1.7] translate-y-[30%] md:scale-[1] md:-translate-y-[10%] lg:-translate-y-[10%] "
                   width={1024}
                   height={490}
                   alt="AI"
@@ -78,8 +77,6 @@ const Hero = () => {
 
           <BackgroundCircles />
         </div>
-
-        <CompanyLogos className="relative z-10 hidden mt-20 lg:block" />
       </div>
 
       <BottomLine />

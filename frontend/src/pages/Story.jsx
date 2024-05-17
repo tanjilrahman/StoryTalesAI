@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import SkeletonStory from "../components/SkeletonStory";
 import Moment from "react-moment";
 import axios from "axios";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 function Story() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function Story() {
   const [formattedDate, setFormattedDate] = useState();
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("Share");
 
   const getStory = () => {
     setLoading(true);
@@ -77,65 +79,108 @@ function Story() {
           {loading ? (
             <SkeletonStory />
           ) : (
-            <div className="max-w-4xl p-6 mx-auto mt-20 md:mt-0">
-              <div className="flex items-center justify-between mt-8 mb-10">
-                <div className="flex space-x-4">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div className="">
-                    <p className="font-bold ">{username}</p>
-                    <p>
-                      Published at{" "}
-                      <Moment
-                        className="font-light"
-                        date={formattedDate}
-                        format="MMMM Do YYYY"
-                      />
-                    </p>
+            <div className="max-w-4xl mx-auto mt-16 md:mt-0">
+              <div className="p-6">
+                <div className="items-center justify-between mt-8 mb-10 md:flex">
+                  <div className="flex space-x-4">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="">
+                      <p className="font-bold ">{username}</p>
+                      <p>
+                        Published at{" "}
+                        <Moment
+                          className="font-light"
+                          date={formattedDate}
+                          format="MMMM Do YYYY"
+                        />
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex mt-6 space-x-4 md:mt-0">
+                    {authUser === "decoy" && (
+                      <Button
+                        onClick={() => deleteStory(params.storyId)}
+                        className="hover:text-red-500"
+                      >
+                        Delete
+                      </Button>
+                    )}
+
+                    <CopyToClipboard
+                      text={window.location.href}
+                      onCopy={() => setCopyStatus("Copied Link")}
+                    >
+                      <Button white className="w-full ml-auto md:w-auto">
+                        {copyStatus}
+                      </Button>
+                    </CopyToClipboard>
                   </div>
                 </div>
+                <h3 className="my-2 md:my-6 h1">{title}</h3>
                 <div>
-                  {authUser === "decoy" && (
-                    <Button
-                      onClick={() => deleteStory(params.storyId)}
-                      className="hover:text-red-500"
-                    >
-                      Delete
-                    </Button>
-                  )}
-
-                  <Button white className="ml-auto">
-                    Share
-                  </Button>
+                  {paragraphs.map((paragraph, i) => (
+                    <div key={i}>
+                      <p className="mx-auto mb-6 text-lg md:text-xl body-1 text-n-2 lg:mb-8">
+                        {paragraph}
+                      </p>
+                      {i === 0 && (
+                        <img
+                          alt={title}
+                          src={images[0]}
+                          className="pt-4 pb-10 rounded-lg"
+                        />
+                      )}
+                      {i === middle(paragraphs.length) - 1 && (
+                        <img
+                          alt={title}
+                          src={images[1]}
+                          className="pt-4 pb-10"
+                        />
+                      )}
+                      {/* {i === paragraphs.length - 2 && (
+                      <img alt={title} src={images[2]} />
+                    )} */}
+                      {i === paragraphs.length - 3 && (
+                        <img
+                          alt={title}
+                          src={images[2]}
+                          className="pt-4 pb-10"
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <h3 className="my-6 h1">{title}</h3>
-              <div>
-                {paragraphs.map((paragraph, i) => (
-                  <div key={i}>
-                    <p className="mx-auto mb-6 body-1 text-n-2 lg:mb-8">
-                      {paragraph}
-                    </p>
-                    {i === 0 && (
-                      <img
-                        alt={title}
-                        src={images[0]}
-                        className="pt-4 pb-10 rounded-lg"
-                      />
-                    )}
-                    {i === middle(paragraphs.length) - 1 && (
-                      <img alt={title} src={images[1]} className="pt-4 pb-10" />
-                    )}
-                    {/* {i === paragraphs.length - 2 && (
-            <img alt={title} src={images[2]} />
-          )} */}
-                    {i === paragraphs.length - 3 && (
-                      <img alt={title} src={images[2]} className="pt-4 pb-10" />
-                    )}
-                  </div>
-                ))}
+              <div className="w-2/3 mx-auto border-t border-gray-700" />
+              <div className="relative mt-8 ">
+                <div className="p-6 space-y-8">
+                  <p className="mx-auto body-1 text-n-2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ornare aenean euismod.
+                  </p>
+                  <p className="hidden mx-auto body-1 text-n-2 md:block">
+                    Ut sem viverra aliquet eget sit amet tellus cras adipiscing.
+                    Varius vel pharetra vel turpis nunc eget. Pharetra et
+                    ultrices neque ornare aenean euismod elementum nisi.
+                  </p>
+
+                  <div className="w-full h-48 md:h-56 bg-gradient-to-b from-n-2/20" />
+                </div>
+                <div className="absolute top-0 w-full h-full text-center pt-28 backdrop-blur-md bg-gradient-to-t from-n-8 ">
+                  <p className="max-w-3xl mx-auto body-1 text-n-2">
+                    Continue your story with Premium
+                  </p>
+                  <a
+                    href="/pricing"
+                    className="inline-block py-3 mt-5 font-bold transition-all duration-300 ease-in-out md:text-lg px-7 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:to-indigo-500"
+                  >
+                    Upgrade Now
+                  </a>
+                </div>
               </div>
             </div>
           )}

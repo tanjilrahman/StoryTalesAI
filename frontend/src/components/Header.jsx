@@ -4,11 +4,18 @@ import { navigation } from "../constants";
 import Button from "./Button";
 import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { heroImage } from "../assets";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Header = () => {
   const pathname = useLocation();
   const [openNavigation, setOpenNavigation] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    setUsername(localStorage.getItem("username"));
+  }, []);
 
   const toggleNavigation = () => {
     if (openNavigation) {
@@ -34,9 +41,9 @@ const Header = () => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-        <a className="block w-[12rem] xl:mr-8 text-xl" href="/">
+        <Link className="block text-xl font-bold w- xl:mr-8" to="/">
           Golpo.ai
-        </a>
+        </Link>
 
         <nav
           className={`${
@@ -45,9 +52,9 @@ const Header = () => {
         >
           <div className="relative flex flex-col items-center justify-center m-auto z-2 lg:flex-row">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.id}
-                href={item.url}
+                to={item.url}
                 onClick={handleClick}
                 className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
                   item.onlyMobile ? "lg:hidden" : ""
@@ -55,25 +62,68 @@ const Header = () => {
                   item.url === pathname.hash
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
-                } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
+                } lg:leading-5 lg:hover:text-n-1 xl:px-12 ${
+                  username && item.onlyMobile && "hidden"
+                } ${!username && item.title === "Logout" && "hidden"}`}
               >
                 {item.title}
-              </a>
+              </Link>
             ))}
+            {username && (
+              <div className="flex justify-end w-full lg:hidden">
+                <Link to="/story">
+                  <div className="flex items-center px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-xs lg:font-semibold space-x-2 bg-opacity-50 lg:space-x-4 rounded-l-2xl">
+                    <div>
+                      <p className="text-2xl uppercase font-code text-n-1">
+                        {username}
+                      </p>
+                    </div>
+                    <Avatar className="w-9 h-9">
+                      <AvatarImage
+                        src={heroImage}
+                        className="scale-[2.3] translate-y-[40%] -translate-x-[10%]"
+                      />
+                      <AvatarFallback>U</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </Link>
+              </div>
+            )}
           </div>
 
           <HamburgerMenu />
         </nav>
 
-        <Link
-          to={"/login"}
-          className="hidden mr-8 transition-colors button text-n-1/50 hover:text-n-1 lg:block"
-        >
-          Login
-        </Link>
-        <Link to={"/register"}>
-          <Button className="hidden lg:flex">Signup</Button>
-        </Link>
+        {username ? (
+          <div className="justify-end hidden w-full lg:flex lg:w-auto">
+            <Link to="/story">
+              <div className="flex items-center p-1 space-x-2 bg-opacity-50 lg:mr-0 lg:space-x-4 rounded-l-2xl">
+                <div>
+                  <p className="text-lg uppercase font-code">{username}</p>
+                </div>
+                <Avatar className="w-9 h-9">
+                  <AvatarImage
+                    src={heroImage}
+                    className="scale-[2.3] translate-y-[40%] -translate-x-[10%]"
+                  />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+              </div>
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <Link
+              to={"/login"}
+              className="hidden mr-8 transition-colors button text-n-1/50 hover:text-n-1 lg:block"
+            >
+              Login
+            </Link>
+            <Link to={"/register"}>
+              <Button className="hidden lg:flex">Signup</Button>
+            </Link>
+          </div>
+        )}
 
         <Button
           className="ml-auto lg:hidden"

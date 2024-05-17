@@ -15,6 +15,8 @@ import Discover from "./pages/Discover.jsx";
 import "./index.css";
 import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
+import ButtonGradient from "./assets/svg/ButtonGradient.jsx";
+import PricingPage from "./pages/Pricing.jsx";
 
 function Logout() {
   localStorage.clear();
@@ -34,7 +36,6 @@ const router = createBrowserRouter([
         <Generate />
       </ProtectedRoute>
     ),
-    errorElement: <NotFound />,
   },
   {
     path: "/library",
@@ -47,6 +48,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/pricing",
+    element: <PricingPage />,
   },
   {
     path: "/discover",
@@ -73,5 +79,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <ButtonGradient />
   </React.StrictMode>
 );

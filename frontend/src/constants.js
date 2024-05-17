@@ -25,31 +25,41 @@ import {
 export const navigation = [
   {
     id: "0",
-    title: "Libary",
-    url: "#libary",
+    title: "Story",
+    url: "/story",
   },
   {
     id: "1",
-    title: "Pricing",
-    url: "#pricing",
+    title: "Library",
+    url: "/library",
   },
   {
     id: "2",
-    title: "How to use",
-    url: "#how-to-use",
+    title: "Discover",
+    url: "/discover",
+  },
+  {
+    id: "3",
+    title: "Pricing",
+    url: "/pricing",
   },
 
   {
-    id: "3",
-    title: "New account",
-    url: "#signup",
+    id: "4",
+    title: "Create account",
+    url: "/register",
     onlyMobile: true,
   },
   {
-    id: "4",
+    id: "5",
     title: "Sign in",
-    url: "#login",
+    url: "/login",
     onlyMobile: true,
+  },
+  {
+    id: "6",
+    title: "Logout",
+    url: "/logout",
   },
 ];
 
