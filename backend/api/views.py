@@ -5,17 +5,14 @@ import cloudinary.uploader
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.conf import settings
-from openai import OpenAI
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import UserSerializer, StorySerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from .models import Story
-from google.cloud import translate
 import google.generativeai as genai
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(settings.BASE_DIR, 'googlekey.json')
 
 cloudinary.config( 
   cloud_name = os.getenv('CLOUDINARY_NAME'), 
@@ -24,10 +21,6 @@ cloudinary.config(
 )
 
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
-
-client = OpenAI(
-    api_key=os.getenv('OPENAI_API_KEY')
-)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -203,80 +196,6 @@ def generate_story_with_gemini(plot, lang):
     return response.text
 
 
-# ChatGPT
-def generate_story_with_chatgpt(plot):
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": f"{os.getenv("PROMPT_BANGLA")}".format(plot=plot)
-            }
-        ],
-        model="gpt-3.5-turbo",
-        max_tokens=1000,
-        response_format={
-            'type': 'json_object',
-        }
-    )
-
-    return chat_completion.choices[0].message.content
-
-
-# Initialize Story Translation 
-def translate_story(content):
-    story_title = translate_text_with_chatgpt(content["title"])
-    story_para = []
-
-    for para in content["story"]:
-        story_para.append(translate_text_with_chatgpt(para))
-
-    story = {
-        "title": story_title,
-        "story": story_para
-    }
-
-    print(story)
-
-    return story
-
-
-# Initialize Translation client with ChatGPT
-def translate_text_with_chatgpt(text):
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": f"Translate the following text in Bangladeshi Bangla language in a casual tone.\n text: {text}"
-            }
-        ],
-        model="gpt-4-turbo",
-        max_tokens=2000,
-    )
-    return chat_completion.choices[0].message.content
-
-
-# Initialize Translation client
-def translate_text_with_google(
-    text, project_id: str = "storytalesai"
-) -> translate.TranslationServiceClient:
-    client = translate.TranslationServiceClient()
-
-    location = "global"
-
-    parent = f"projects/{project_id}/locations/{location}"
-
-    response = client.translate_text(
-        request={
-            "parent": parent,
-            "contents": [text],
-            "mime_type": "text/plain",
-            "source_language_code": "en-US",
-            "target_language_code": "bn",
-        }
-    )
-
-    return response.translations[0].translated_text
-
 
 # Initialize Image generation
 def generate_images(prompt_content):
@@ -357,16 +276,92 @@ def generate_image_with_stability(prompt):
     return(cloud_image_url["secure_url"])
 
 
-# Single Image generation
-def generate_image_with_dalle(prompt):
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt=prompt,
-        size="1024x1024",
-        quality="standard",
-        n=1,
-    )
+# ChatGPT
+# def generate_story_with_chatgpt(plot):
+#     chat_completion = client.chat.completions.create(
+#         messages=[
+#             {
+#                 "role": "user",
+#                 "content": f"{os.getenv("PROMPT_BANGLA")}".format(plot=plot)
+#             }
+#         ],
+#         model="gpt-3.5-turbo",
+#         max_tokens=1000,
+#         response_format={
+#             'type': 'json_object',
+#         }
+#     )
 
-    image_url = response.data[0].url
-    cloud_image_url = cloudinary.uploader.upload(image_url)
-    return(cloud_image_url["secure_url"])
+#     return chat_completion.choices[0].message.content
+
+
+# Initialize Story Translation 
+# def translate_story(content):
+#     story_title = translate_text_with_chatgpt(content["title"])
+#     story_para = []
+
+#     for para in content["story"]:
+#         story_para.append(translate_text_with_chatgpt(para))
+
+#     story = {
+#         "title": story_title,
+#         "story": story_para
+#     }
+
+#     print(story)
+
+#     return story
+
+
+# Initialize Translation client with ChatGPT
+# def translate_text_with_chatgpt(text):
+#     chat_completion = client.chat.completions.create(
+#         messages=[
+#             {
+#                 "role": "user",
+#                 "content": f"Translate the following text in Bangladeshi Bangla language in a casual tone.\n text: {text}"
+#             }
+#         ],
+#         model="gpt-4-turbo",
+#         max_tokens=2000,
+#     )
+#     return chat_completion.choices[0].message.content
+
+
+# Initialize Translation client
+# def translate_text_with_google(
+#     text, project_id: str = "storytalesai"
+# ) -> translate.TranslationServiceClient:
+#     client = translate.TranslationServiceClient()
+
+#     location = "global"
+
+#     parent = f"projects/{project_id}/locations/{location}"
+
+#     response = client.translate_text(
+#         request={
+#             "parent": parent,
+#             "contents": [text],
+#             "mime_type": "text/plain",
+#             "source_language_code": "en-US",
+#             "target_language_code": "bn",
+#         }
+#     )
+
+#     return response.translations[0].translated_text
+
+
+
+# Single Image generation
+# def generate_image_with_dalle(prompt):
+#     response = client.images.generate(
+#         model="dall-e-3",
+#         prompt=prompt,
+#         size="1024x1024",
+#         quality="standard",
+#         n=1,
+#     )
+
+#     image_url = response.data[0].url
+#     cloud_image_url = cloudinary.uploader.upload(image_url)
+#     return(cloud_image_url["secure_url"])
