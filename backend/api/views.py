@@ -89,11 +89,16 @@ class StoryListCreate(generics.ListCreateAPIView):
             lang = serializer.validated_data.get('lang')
             print(lang)
 
-            generated_content = generate_story_with_gemini(plot, lang)
-            generated_content_parsed = json.loads(generated_content)
-
+            try:
+                generated_content = generate_story_with_gemini(plot, lang)
+                generated_content_parsed = json.loads(generated_content)
+            except json.JSONDecodeError:
+                print("JSON failed, regenerating...")
+                # If json.loads fails, regenerate the story with Gemini
+                generated_content = generate_story_with_gemini(plot, lang)
+                generated_content_parsed = json.loads(generated_content)
+            
             generated_images = generate_images(generated_content_parsed)
-            # content = translate_story(generated_content_parsed) if lang == 'bangla' else generated_content_parsed
             serializer.save(author=self.request.user, content=generated_content, image=json.dumps(generated_images))
             return serializer.data['id']
         else:
