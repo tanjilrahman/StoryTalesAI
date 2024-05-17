@@ -271,7 +271,7 @@ def generate_image_with_stability(prompt):
         response_code = 200
 
         data = response.json()
-        cloud_image_url = cloudinary.uploader.upload(f"data:image/png;base64,{data["artifacts"][0]['base64']}")
+        cloud_image_url = cloudinary.uploader.upload(f"data:image/png;base64,{data['artifacts'][0]['base64']}")
 
     return(cloud_image_url["secure_url"])
 
