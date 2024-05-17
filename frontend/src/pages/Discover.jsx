@@ -52,7 +52,7 @@ function Discover() {
             </span>{" "}
             Hub
           </h1>
-          <p className="max-w-3xl mx-auto mb-6 text-xl text-n-2 lg:mb-8">
+          <p className="max-w-3xl mx-auto mb-6 md:text-xl text-n-2 lg:mb-8">
             Discover Community Creations
           </p>
         </div>
