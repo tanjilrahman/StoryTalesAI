@@ -17,6 +17,7 @@ import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import ButtonGradient from "./assets/svg/ButtonGradient.jsx";
 import PricingPage from "./pages/Pricing.jsx";
+import ClipPath from "./assets/svg/ClipPath.jsx";
 
 function Logout() {
   localStorage.clear();
@@ -80,5 +81,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
     <ButtonGradient />
+    <ClipPath />
   </React.StrictMode>
 );

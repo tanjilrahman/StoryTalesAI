@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ClipPath from "../assets/svg/ClipPath";
 function StoryCard({ story, onDelete }) {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -53,7 +52,6 @@ function StoryCard({ story, onDelete }) {
               <h5 className="mb-5 h5">{title}</h5>
             </div>
           </div>
-          <ClipPath />
         </div>
       </Link>
     </div>
