@@ -7,6 +7,7 @@ import { HamburgerMenu } from "./design/Header";
 import { useEffect, useState } from "react";
 import { heroImage } from "../assets";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import ButtonGradient from "../assets/svg/ButtonGradient";
 
 const Header = () => {
   const pathname = useLocation();
@@ -132,6 +133,7 @@ const Header = () => {
         >
           <MenuSvg openNavigation={openNavigation} />
         </Button>
+        <ButtonGradient />
       </div>
     </div>
   );
