@@ -154,9 +154,9 @@ def generate_plot_with_gemini(lang):
 
 # Gemini
 def generate_story_with_gemini(plot, lang):
-    prompt = f"{os.getenv("PROMPT")}".format(plot=plot)
+    prompt = f"{os.getenv('PROMPT')}".format(plot=plot)
 
-    prompt_bangla = f"{os.getenv("PROMPT_BANGLA")}".format(plot=plot)
+    prompt_bangla = f"{os.getenv('PROMPT_BANGLA')}".format(plot=plot)
 
     # Set up the model
     generation_config = {
@@ -282,7 +282,7 @@ def generate_image_with_stability(prompt):
 #         messages=[
 #             {
 #                 "role": "user",
-#                 "content": f"{os.getenv("PROMPT_BANGLA")}".format(plot=plot)
+#                 "content": f"{os.getenv('PROMPT_BANGLA')}".format(plot=plot)
 #             }
 #         ],
 #         model="gpt-3.5-turbo",
