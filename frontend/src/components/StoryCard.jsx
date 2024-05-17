@@ -6,6 +6,7 @@ import benefitCard3 from "/card-3.svg";
 import benefitCard4 from "/card-4.svg";
 import benefitCard5 from "/card-5.svg";
 import benefitCard6 from "/card-6.svg";
+import ClipPath from "../assets/svg/ClipPath";
 
 function StoryCard({ story, onDelete }) {
   const [title, setTitle] = useState("");
@@ -63,6 +64,7 @@ function StoryCard({ story, onDelete }) {
           </div>
         </div>
       </Link>
+      <ClipPath />
     </div>
   );
 }
