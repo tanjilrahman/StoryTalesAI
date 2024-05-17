@@ -202,16 +202,16 @@ def generate_images(prompt_content):
     generated_images = []
 
     image_prompt_1 = (
-        f"{prompt_content["image_prompts"][0]}"
+        f"{prompt_content['image_prompts'][0]}"
     )
     image_prompt_2 = (
-        f"{prompt_content["image_prompts"][1]}"
+        f"{prompt_content['image_prompts'][1]}"
     )
     image_prompt_3 = (
-        f"{prompt_content["image_prompts"][2]}"
+        f"{prompt_content['image_prompts'][2]}"
     )
     # image_prompt_4 = (
-    #     f"{prompt_content["image_prompts"][3]}"
+    #     f"{prompt_content['image_prompts'][3]}"
     # )
 
     generated_images.append(generate_image_with_stability(image_prompt_1))
