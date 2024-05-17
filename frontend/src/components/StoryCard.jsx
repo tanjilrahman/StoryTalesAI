@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import benefitCard1 from "/card-1.svg";
+import benefitCard2 from "/card-2.svg";
+import benefitCard3 from "/card-3.svg";
+import benefitCard4 from "/card-4.svg";
+import benefitCard5 from "/card-5.svg";
+import benefitCard6 from "/card-6.svg";
+
 function StoryCard({ story, onDelete }) {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
@@ -10,14 +17,18 @@ function StoryCard({ story, onDelete }) {
     setImage(JSON.parse(story.image)[0]);
   }, [story]);
 
-  const backgorunds = [
-    "./src/assets/benefits/card-1.svg",
-    "./src/assets/benefits/card-2.svg",
-    "./src/assets/benefits/card-3.svg",
-    "./src/assets/benefits/card-4.svg",
-    "./src/assets/benefits/card-5.svg",
-    "./src/assets/benefits/card-6.svg",
+  const backgrounds = [
+    benefitCard1,
+    benefitCard2,
+    benefitCard3,
+    benefitCard4,
+    benefitCard5,
+    benefitCard6,
   ];
+
+  // Generate a random index to select a background image
+  const randomIndex = Math.floor(Math.random() * backgrounds.length);
+  const selectedBackground = backgrounds[randomIndex];
 
   return (
     <div>
@@ -25,9 +36,7 @@ function StoryCard({ story, onDelete }) {
         <div
           className="block relative p-0.5 bg-no-repeat bg-[length:100%_100%] md:max-w-[24rem] hover:scale-110 transition duration-300 ease-in-out"
           style={{
-            backgroundImage: `url(${
-              backgorunds[Math.floor(Math.random() * 5)]
-            })`,
+            backgroundImage: `url(${selectedBackground})`,
           }}
         >
           <div

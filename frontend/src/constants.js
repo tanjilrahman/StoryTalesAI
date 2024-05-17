@@ -1,7 +1,6 @@
 export const ACCESS_TOKEN = "access";
 export const REFRESH_TOKEN = "refresh";
 import {
-  benefitImage2,
   chromecast,
   disc02,
   discordBlack,
@@ -122,54 +121,6 @@ export const pricing = [
       "Own the rights to stories & images",
       "Priority support to solve issues quickly",
     ],
-  },
-];
-
-export const benefits = [
-  {
-    id: "0",
-    title: " The Siamese Cat Who Lived Forever",
-    text: "Once upon a time, there was a magical Siamese cat named Loki. He had beautiful blue eyes and long white fur that seemed to sparkle in the sun. Everyone who saw him commented on his majestic beauty and sweet personality.",
-    backgroundUrl: "./src/assets/benefits/card-1.svg",
-    imageUrl: benefitImage2,
-  },
-  {
-    id: "1",
-    title: "Molly and the Elephant with a Thorn in His Foot",
-    text: "Molly was a very quiet and shy little girl who loved spending time with animals. One day, she heard a loud and pained trumpet coming from the forest near her home. She immediately knew it had to be an elephant, so she ventured into the forest to investigate.",
-    backgroundUrl: "./src/assets/benefits/card-2.svg",
-    imageUrl: "./src/assets/benefits/3.jpeg",
-    light: true,
-  },
-  {
-    id: "2",
-    title:
-      "Poppy and Sky Lou's Introduction to String Theory: An Exciting STEM Adventure!",
-    text: "Once upon a time there were two 3 year old girls named Poppy and Sky Lou that were excited about STEM in general. One night when Poppy and Sky Lou were getting ready for bed, they asked their parents if they could hear a story about science.",
-    backgroundUrl: "./src/assets/benefits/card-3.svg",
-    imageUrl: "./src/assets/benefits/1.jpeg",
-  },
-  {
-    id: "3",
-    title: "Fast responding",
-    text: "Lets users quickly find answers to their questions without having to search through multiple sources.",
-    backgroundUrl: "./src/assets/benefits/card-4.svg",
-    imageUrl: benefitImage2,
-    light: true,
-  },
-  {
-    id: "4",
-    title: "Ask anything",
-    text: "Lets users quickly find answers to their questions without having to search through multiple sources.",
-    backgroundUrl: "./src/assets/benefits/card-5.svg",
-    imageUrl: benefitImage2,
-  },
-  {
-    id: "5",
-    title: "Improve everyday",
-    text: "The app uses natural language processing to understand user queries and provide accurate and relevant responses.",
-    backgroundUrl: "./src/assets/benefits/card-6.svg",
-    imageUrl: benefitImage2,
   },
 ];
 
