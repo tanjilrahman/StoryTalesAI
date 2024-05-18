@@ -116,7 +116,7 @@ class CreateUserView(generics.CreateAPIView):
 
 # Plot generate
 def generate_plot_with_gemini(lang):
-    prompt = f"Generate a short story plot with interesting twists in {lang}. Genre: Could be any one of these - Mythpunk, Gaslamp Fantasy, Cozy Mystery, Historical Romance with a Fantasy Twist, Post-Apocalyptic Hopepunk, Science Fantasy, Romantic Thriller, Historical Horror, Crime Comedy, Espionage Fantasy. Length: 100 characters"
+    prompt = f"Generate a short story plot with interesting twists in {lang}. Genre: for kids, fun, scientific, educational. Length: 100 characters"
 
     # Set up the model
     generation_config = {
@@ -127,24 +127,23 @@ def generate_plot_with_gemini(lang):
         "response_mime_type": "text/plain",
     }
     safety_settings = [
-        {
-            "category": "HARM_CATEGORY_HARASSMENT",
-            "threshold": "BLOCK_NONE",
-        },
-        {
-            "category": "HARM_CATEGORY_HATE_SPEECH",
-            "threshold": "BLOCK_NONE",
-        },
-        {
-            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            "threshold": "BLOCK_NONE",
-        },
-        {
-            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-            "threshold": "BLOCK_NONE",
-        },
-    ]
-
+  {
+    "category": "HARM_CATEGORY_HARASSMENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+  },
+  {
+    "category": "HARM_CATEGORY_HATE_SPEECH",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+  },
+  {
+    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+  },
+  {
+    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE",
+  },
+]
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash-latest",
         safety_settings=safety_settings,
@@ -171,21 +170,21 @@ def generate_story_with_gemini(plot, lang):
     safety_settings = [
         {
             "category": "HARM_CATEGORY_HARASSMENT",
-            "threshold": "BLOCK_NONE",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE",
         },
         {
             "category": "HARM_CATEGORY_HATE_SPEECH",
-            "threshold": "BLOCK_NONE",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE",
         },
         {
             "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-            "threshold": "BLOCK_NONE",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE",
         },
         {
             "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-            "threshold": "BLOCK_NONE",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE",
         },
-    ]
+        ]
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash-latest",
