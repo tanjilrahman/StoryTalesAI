@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 import NotFound from "./NotFound";
 import Sidebar from "../components/Sidebar";
@@ -14,8 +14,9 @@ import CopyToClipboard from "react-copy-to-clipboard";
 function Story() {
   const navigate = useNavigate();
   const params = useParams();
-  const [authUser, setAuthUser] = useState(localStorage.getItem("username"));
-  const [username, setUsername] = useState("Anonymous");
+  const [authUser] = useState(localStorage.getItem("username"));
+  const [username, setUsername] = useState(null);
+  const [author, setAuthor] = useState("Anonymous");
   const [title, setTitle] = useState("");
   const [paragraphs, setParagraphs] = useState([]);
   const [images, setImages] = useState([]);
@@ -33,10 +34,11 @@ function Story() {
         console.log(data);
         const story = JSON.parse(data.content);
         if (data.author_first === "" || data.author_last === "") {
-          setUsername("Anonymous");
+          setAuthor("Anonymous");
         } else {
-          setUsername(data.author_first + " " + data.author_last);
+          setAuthor(data.author_first + " " + data.author_last);
         }
+        setUsername(data.author_username);
         setTitle(story.title);
         setParagraphs(story.story);
         setImages(JSON.parse(data.image));
@@ -88,7 +90,7 @@ function Story() {
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="">
-                      <p className="font-bold ">{username}</p>
+                      <p className="font-bold ">{author}</p>
                       <p>
                         Published at{" "}
                         <Moment
@@ -100,7 +102,7 @@ function Story() {
                     </div>
                   </div>
                   <div className="flex mt-6 space-x-4 md:mt-0">
-                    {authUser === "decoy" && (
+                    {(authUser === "admin" || username == authUser) && (
                       <Button
                         onClick={() => deleteStory(params.storyId)}
                         className="hover:text-red-500"
@@ -174,12 +176,12 @@ function Story() {
                   <p className="max-w-3xl mx-auto body-1 text-n-2">
                     Continue your story with Premium
                   </p>
-                  <a
-                    href="/pricing"
+                  <Link
+                    to="/pricing"
                     className="inline-block py-3 mt-5 font-bold transition-all duration-300 ease-in-out md:text-lg px-7 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:to-indigo-500"
                   >
                     Upgrade Now
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

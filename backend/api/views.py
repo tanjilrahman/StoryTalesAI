@@ -103,8 +103,10 @@ class StoryDelete(generics.DestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if (user.username == "decoy"):
+        if (self.request.user.is_superuser): 
             return Story.objects.filter()
+        else:
+            return Story.objects.filter(author=user)
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
