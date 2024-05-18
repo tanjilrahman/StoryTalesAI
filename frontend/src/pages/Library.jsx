@@ -6,6 +6,8 @@ import Header from "../components/Header";
 import { curve } from "../assets";
 import SkeletonStoryCard from "../components/SkeletonStoryCard";
 import { Skeleton } from "../components/ui/skeleton";
+import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 function Library() {
   const [stories, setStories] = useState([]);
@@ -58,13 +60,20 @@ function Library() {
           </p>
         </div>
         <div className="grid grid-cols-1 gap-10 mb-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {loading
-            ? [...Array(8)].map((e, i) => (
-                <SkeletonStoryCard key={i}></SkeletonStoryCard>
-              ))
-            : stories.map((story) => (
-                <StoryCard story={story} key={story.id} />
-              ))}
+          {loading ? (
+            [...Array(8)].map((e, i) => (
+              <SkeletonStoryCard key={i}></SkeletonStoryCard>
+            ))
+          ) : stories.length > 0 ? (
+            stories.map((story) => <StoryCard story={story} key={story.id} />)
+          ) : (
+            <div className="items-center w-full mx-auto">
+              <p>You don't have any stories</p>
+              <Link to={"/story"}>
+                <Button white>Create story</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

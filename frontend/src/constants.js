@@ -92,7 +92,7 @@ export const pricing = [
     description:
       "Your very own bedtime story author by your side, from only...",
     price: "0",
-    features: ["4 stories per month", "3 image per story"],
+    features: ["4 stories per month", "3 images per story"],
   },
   {
     id: "1",
