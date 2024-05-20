@@ -5,26 +5,37 @@ import Header from "../components/Header";
 import { curve } from "../assets";
 import SkeletonStoryCard from "../components/SkeletonStoryCard";
 import axios from "axios";
+import api from "../api";
 
 function Discover() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [authUser] = useState(localStorage.getItem("username"));
   useEffect(() => {
     getStories();
   }, []);
 
   const getStories = () => {
     setLoading(true);
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/all-stories/")
-      .then((res) => res.data)
-      .then((data) => {
-        setStories(data);
-        setLoading(false);
-        console.log(data);
-      })
-      .catch((err) => alert(err));
+    authUser === "admin"
+      ? api
+          .get(import.meta.env.VITE_API_URL + "/api/all-stories/")
+          .then((res) => res.data)
+          .then((data) => {
+            setStories(data);
+            setLoading(false);
+            console.log(data);
+          })
+          .catch((err) => alert(err))
+      : axios
+          .get(import.meta.env.VITE_API_URL + "/api/all-stories/")
+          .then((res) => res.data)
+          .then((data) => {
+            setStories(data);
+            setLoading(false);
+            console.log(data);
+          })
+          .catch((err) => alert(err));
   };
 
   return (

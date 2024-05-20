@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class Story(models.Model):
     title = models.CharField()
+    isPublic = models.BooleanField(default=True)
     lang = models.CharField(default="english")
     image = models.TextField()
     content = models.TextField()

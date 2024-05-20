@@ -14,6 +14,7 @@ import CopyToClipboard from "react-copy-to-clipboard";
 function Story() {
   const navigate = useNavigate();
   const params = useParams();
+  const [isPublic, setIsPublic] = useState(null);
   const [authUser] = useState(localStorage.getItem("username"));
   const [username, setUsername] = useState(null);
   const [author, setAuthor] = useState("Anonymous");
@@ -43,6 +44,7 @@ function Story() {
         setParagraphs(story.story);
         setImages(JSON.parse(data.image));
         setFormattedDate(data.created_at);
+        setIsPublic(data.isPublic);
         setLoading(false);
       })
       .catch((err) => err.response.status === 404 && setNotFound(true));
@@ -54,6 +56,18 @@ function Story() {
       .then((res) => {
         if (res.status === 204) navigate("/discover");
         else alert("Failed to delete story.");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const visibilityStatus = (id) => {
+    api
+      .put(`/api/stories/visibility/${id}/`, { isPublic: !isPublic })
+      .then((res) => {
+        setIsPublic(!isPublic);
+        alert(
+          `Story visibility set to ${isPublic == true ? "Public" : "Private"}!`
+        );
       })
       .catch((error) => console.log(error));
   };
@@ -101,15 +115,25 @@ function Story() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex mt-6 space-x-4 md:mt-0">
-                    {(authUser === "admin" || username == authUser) && (
-                      <Button
-                        onClick={() => deleteStory(params.storyId)}
-                        className="hover:text-red-500"
-                      >
-                        Delete
-                      </Button>
-                    )}
+                  <div className="mt-6 space-y-3 md:space-x-3 md:space-y-0 md:flex md:mt-0">
+                    <div className="flex items-center space-x-3 ">
+                      {(authUser === "admin" || username == authUser) && (
+                        <Button
+                          onClick={() => deleteStory(params.storyId)}
+                          className="w-full md:text-gray-500 md:w-5 hover:text-red-500"
+                        >
+                          Delete
+                        </Button>
+                      )}
+                      {username == authUser && (
+                        <Button
+                          onClick={() => visibilityStatus(params.storyId)}
+                          className="w-full md:text-gray-500 md:w-auto"
+                        >
+                          {isPublic === true ? "Make Private" : "Make Public"}
+                        </Button>
+                      )}
+                    </div>
 
                     <CopyToClipboard
                       text={window.location.href}

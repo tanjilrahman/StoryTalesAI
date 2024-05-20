@@ -135,7 +135,7 @@ const Sidebar = () => {
       ) : (
         <div className="p-4 mt-3">
           <div>
-            <Link to={"/signin"}>
+            <Link to={"/login"}>
               <button
                 className={`flex items-center w-full px-4 py-3 transition hover:bg-indigo-500 rounded-2xl`}
               >

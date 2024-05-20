@@ -8,7 +8,7 @@ from django.conf import settings
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import UserSerializer, StorySerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from .models import Story
 import google.generativeai as genai
@@ -37,17 +37,19 @@ class AllStoriesListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = Story.objects.order_by('-created_at')
-        # Get the 'n' value from query parameters
+        user = self.request.user
+        if user.is_superuser:
+            queryset = Story.objects.order_by('-created_at')
+        else: 
+            queryset = Story.objects.filter(isPublic=True).order_by('-created_at')
+            
         n = self.request.query_params.get('n')
 
-        # Apply limit if 'n' is provided
         if n:
             try:
                 n = int(n)
                 queryset = queryset[:n]
             except ValueError:
-                # Handle invalid 'n' value (e.g., non-integer)
                 pass
 
         return queryset
@@ -67,6 +69,24 @@ class StoryRetrieveView(generics.RetrieveAPIView):
         data["author_last"] = instance.author.last_name
 
         return Response(data)
+
+
+class StoryVisibility(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    def put(self, request, pk):
+        try:
+            story = Story.objects.get(pk=pk)
+        except Story.DoesNotExist:
+            return Response({"error": "Story not found"})
+
+        # Update the isPublic status
+        new_status = request.data.get("isPublic")
+        story.isPublic = new_status
+        story.save()
+
+        serializer = StorySerializer(story)
+        return Response(serializer.data)
+    
 
 class StoryListCreate(generics.ListCreateAPIView):
     serializer_class = StorySerializer
