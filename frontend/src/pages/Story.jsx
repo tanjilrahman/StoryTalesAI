@@ -24,6 +24,7 @@ function Story() {
   const [formattedDate, setFormattedDate] = useState();
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState("Share");
 
   const getStory = () => {
@@ -51,25 +52,29 @@ function Story() {
   };
 
   const deleteStory = (id) => {
+    setButtonLoading(true);
     api
       .delete(`/api/stories/delete/${id}/`)
       .then((res) => {
         if (res.status === 204) navigate("/discover");
         else alert("Failed to delete story.");
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => setButtonLoading(false));
   };
 
   const visibilityStatus = (id) => {
+    setButtonLoading(true);
     api
       .put(`/api/stories/visibility/${id}/`, { isPublic: !isPublic })
       .then((res) => {
         setIsPublic(!isPublic);
         alert(
-          `Story visibility set to ${isPublic == true ? "Public" : "Private"}!`
+          `Story visibility set to ${isPublic == true ? "Private" : "Public"}!`
         );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => setButtonLoading(false));
   };
 
   useEffect(() => {
@@ -121,6 +126,7 @@ function Story() {
                         <Button
                           onClick={() => deleteStory(params.storyId)}
                           className="w-full md:text-gray-500 md:w-5 hover:text-red-500"
+                          disable={buttonLoading}
                         >
                           Delete
                         </Button>
@@ -129,6 +135,7 @@ function Story() {
                         <Button
                           onClick={() => visibilityStatus(params.storyId)}
                           className="w-full md:text-gray-500 md:w-auto"
+                          disable={buttonLoading}
                         >
                           {isPublic === true ? "Make Private" : "Make Public"}
                         </Button>
