@@ -1,1 +1,5 @@
-/* /index.html 200
+
+  from = "/old-path"
+  to = "https://www.newsite.com/new-path"
+  status = 301
+  force = true
