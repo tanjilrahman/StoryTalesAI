@@ -1,5 +1,5 @@
 
-  from = "/old-path"
-  to = "https://www.newsite.com/new-path"
+  from = "/*"
+  to = "https://golpoai.vercel.app/"
   status = 301
   force = true
