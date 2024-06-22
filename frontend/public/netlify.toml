@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/*"
+  to = "https://golpoai.vercel.app/"
+  status = 301
+  force = true
